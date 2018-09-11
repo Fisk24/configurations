@@ -1,0 +1,150 @@
+Platform: Arch Manjaro Linux mouse cursor disappears invisable tmux?
+Issue: On occasion the mouse curser will vanish but still be functional
+Warning: This fix may or may not be correct. The issue might be related to tmux or the gnome-terminal
+
+#Open dconf editor and set this value to false
+org/gnome/settings-daemon/plugins/mouse/active
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Platform: Arch Manjaro Linux opengl pokemon Pokemon crashing unhelpful error message
+Issue: On some 64bit installations, certain opengl applications will fail to launch
+
+# 32bit libgl packages are required
+# on Nvidia
+pacman -S lib32-mesa-libgl lib32-nvidia-libgl
+# on AMD
+pacman -S lib32-mesa-libgl lib32-catalyst-utils
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Platform: Arch Manjaro Linux cryptsetup Safe safe LUKS Locker
+Issue: cryptsetup hangs when opening and closing encrypted containers
+
+# This solution may only work if cryptsetup is hanging on "Udev cookie waiting for zero"
+# to find out where it hangs launch any cryptsetup command with the "--debug" flag
+
+eg. $ cryptsetup luksClose DEVICENAME --debug
+
+$ pacman -S lvm2
+$ reboot
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Platform: Arch Manjaro Linux Firefox
+Issue: hulu in firefox drm; There was a problem playing this protected content (Code: 2203)
+
+# the hal package enables playback of drm protected content
+yaourt hal-flash
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Platform: Manjaro Gdm Gnome
+Issue: Headset pairs and connects but shows no audio device, no sound
+
+sudo mkdir -p ~gdm/.config/systemd/user
+sudo ln -s /dev/null ~gdm/.config/systemd/user/pulseaudio.socket
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Platform: Manjaro Gdm Gnome
+Issue: hid (null): usage index exceeded and hang durring boot...
+
+	$cp /etc/default/grub /etc/default/grub.bak
+	$vim /etc/default/grub
+	then in vim
+	change: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+	to:     GRUB_CMDLINE_LINUX_DEFAULT="quiet splash usbhid.quirks=0x0b05.0x17fd.0x04"
+	then save and quit vim
+	$update-grub
+
+The solution to this issue was found at: https://bbs.archlinux.org/viewtopic.php?id=195577
+
+Here is how I found out what sequence of numbers and letters to use!
+
+The error message "hid-genaric 0003:0b05:17fd.0006: usage index exceeded" matched the following entry in the output of
+"lsusb -v":				^
+                           |-- Match! --|
+...                        V
+Bus 003 Device 007: ID 0b05:17fd ASUSTek Computer, Inc. 
+Couldn't open device, some information will be missing
+Device Descriptor:
+...
+
+Under the "Device Descriptor" section, there is a sub-section labled "Endpoint Descriptor" like this:
+...
+Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x04  EP 4 OUT
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0008  1x 8 bytes
+        bInterval               2
+...
+
+There are several of the Endpoint Descriptors but the one we need is at the very end of the ASUSTek entry.
+To complete the solution we will use the value listed for "bEndpointAddress"; "0x04" that is.
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Issue: playing local flash files ".swf"
+
+++ A) to play in browser
+$ cp /usr/share/mime/packages/freedesktop.org.xml /usr/share/mime/packages/freedesktop.org.xml.bak
+$ gedit /usr/share/mime/packages/freedesktop.org.xml
+
+replace:
+	<mime-type type="application/vnd.adobe.flash.movie">
+with:
+	<mime-type type="application/x-shockwave-flash">
+
+$ update-mime-database /usr/share/mime
+
+++ B) to play in standalone projector
+In Arch:
+	yaourt flashplayer-standalone
+In Other Distros:
+	goto http://www.adobe.com/support/flashplayer/debug_downloads.html
+	Download the linux version of Flash Player Projector
+	Extract the tarball into /opt/flashprojector
+	Finally make a desktop file in ~/.local/share/applications to launch it from the applications menu
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Platform: Arch Antergos Gnome
+Issue: Steam overlay not working shift+tab nope
+
+Solution found here: http://steamcommunity.com/discussions/forum/1/558753803617398536/
+
+$ rm ~/.steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libxcb.so.1
+or, if you're still using old location:
+$ rm ~/.local/share/Steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libxcb.so.1
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+Removed xf86-input-joystick so triggers would stop forcing the mouse up
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+
