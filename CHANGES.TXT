@@ -50,8 +50,8 @@ yaourt hal-flash
 Platform: Manjaro Gdm Gnome
 Issue: Headset pairs and connects but shows no audio device, no sound
 
-sudo mkdir -p ~gdm/.config/systemd/user
-sudo ln -s /dev/null ~gdm/.config/systemd/user/pulseaudio.socket
+$ sudo -ugdm mkdir -p /var/lib/gdm/.config/systemd/user
+$ sudo -ugdm ln -s /dev/null /var/lib/gdm/.config/systemd/user/pulseaudio.socket
 
 =======================================================================================================================
 #######################################################################################################################
@@ -147,4 +147,141 @@ Removed xf86-input-joystick so triggers would stop forcing the mouse up
 #######################################################################################################################
 =======================================================================================================================
 
+++ Platform Arch Linux under Wine Staging
+++ Issue: Battle.net Blizzard App can't login logo spining forever in wine Installing, full writeup
+	  Installer failes to start/load in wine
 
+- Set winecfg windows version to Windows 10
+- In wine, install Battle.net FIRST, after setting the windows version but before any other program or dependency.
+
+$ pacman -S lib32-libldap lib32-gnutls
+
+If all else fails, ensure that all of these packages are installed:
+$ pacman -S wine-staging lib32-libjpeg-turbo lib32-libpng lib32-libldap lib32-libpulse lib32-alsa-plugins
+
+# yaourt ttf-ms-fonts
+# winetricks corefonts
+
+- Finally set windows version to Windows 10 again, because it will have likely changed.
+
+
+
+World of Warcraft specific instructions:
+
+In winetricks install dxvk
+# winetricks dxvk
+
+In winecfg add "Battle.net Launcher.exe", "Battle.net.exe" to the list.
+For these two executables set the library dxgi to builtin. This is to prevent Battle.net from crashing on launch.
+
+Again in winecfg add "Agent.exe" to the list. This file is located in "C:\Program Data\Battle.net\Agent"
+For this executable set the libraries dxgi and d3d11 to builtin. This will prevent Battle.net Agent from crashing 
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+++ Platform: Arch Linux under Wine Staging using Pulseaudio Drivers
+++ Issue: Programs running under wine have choppy sound
+
+Possible Solution 1:
+ $ vim /etc/pulse/daemon.conf
+
+- Uncomment these lines:
+> default-fragments = 4
+> default-fragment-size-msec = 25
+- Then change the value of the second line to 5
+> default-fragment-size-msec = 5
+
+=======================================================================================================================
+#######################################################################################################################
+=======================================================================================================================
+
+++ Platform: Arch Linux
+++ Issue: System Failes to boot after botched / corrupted / failed update
+
+Steps Common to ALL Recovery Methods (Perform these steps before any other method):
+
+Boot in to a Live Environment. Any linux distibution should do the trick, but for ease of use
+try to select one thatt most closely matches your installed system.
+
+Ensure that the computer is booted into the correct mode 
+(EFI or BIOS), otherwise further damage may occur.
+
+Ensure that the Live Environment that you will be using to perform the recovery
+is "Connected to the Internet"
+
+Then Chroot into your installed linux system.
+
+Perform a Chroot (Change Root) operation:
+	1) Mount any and all operating system partitions
+	A list of operating system partitions and their respective mount points
+	can be found in the /etc/fstab file usually.
+
+# lsblk (to list all block devices and their partitions)
+# mount /dev/sdX# /mnt
+# mount /dev/sdx# /mnt/home
+# mount /dev/sdX# /mnt/boot (Only if your system boots in BIOS mode)
+# mount /dev/sdX# /mnt/boot/efi (If you boot using EFI mode. Check fstab to confirm)
+	
+	2.a) If you are utilizing an arch or arch-based live environment, envoke the arch-chroot command
+	
+# arch-chroot /mnt
+	
+	If the command completes successfully the chroot should now be complete.
+	Otherwise, refer to step "2.b".
+
+	2.b) If you are utilizing a non-arch live environment to perform the chroot operation, or 
+	otherwise do not have access to the arch-chroot command. You must also mount 
+	the temporary api filesystems and copy the resolv.conf file so that the chroot environment
+	can access the internet.
+
+# cp /etc/resolv.conf /mnt/etc/resolv.conf
+
+# mount -t proc /proc /mnt/proc/
+# mount --rbind /sys /mnt/sys/
+# mount --rbind /dev /mnt/dev/
+	
+	and optionally
+
+# mount --rbind /run /mnt/run/ 
+	
+	Finally, change root using a bash shell.
+
+# chroot /mnt /bin/bash
+
+
+Recovering from a corrupted upgrade:
+
+	In the event that "pacman -Syyu" fails to correctly install upgraded packages. The system may
+fail to boot apon restarting. If this is the case, simply reinstall the effected packages.
+
+	Pacman will reinstall packages utilizing a checksum system, and will automatcally redownload any 
+packages that were corrupted durring the previous installation attempt.
+
+	In the case of an upgrade, many packages may have been effected. To see a list of recently
+upgraded packages, envoke the following command inside of your "CHROOT" environment.
+
+# grep -i upgraded /var/log/pacman.log
+
+Here is some example output from pacman.log:
+
+[2018-11-14 12:35] [ALPM] upgraded vim-runtime (8.1.0470-1 -> 8.1.0519-1)
+[2018-11-14 12:35] [ALPM] upgraded vim (8.1.0470-1 -> 8.1.0519-1)
+[2018-11-14 12:35] [ALPM] upgraded which (2.21-2 -> 2.21-3)
+[2018-11-14 12:35] [ALPM] upgraded wine-staging (3.19-1 -> 3.20-1)
+
+	Likely, you will be most interested in the packages that were all upgraded on the same day.
+Use the datestamp provided by the pacman.log to determine which packages were upgraded on the
+day that the damage occured. Then, assemble a command to reinstall the effected packages.
+
+# WARNING - It is unwise to clear the upgrade cache at /var/cache/pacman/pkg durring the course 
+# of this recovery method, as you may need access to older packages if the problem is being 
+# caused by an instablilty or bug in the latest version of the software that you are upgrading.
+	
+	Your newly assembled command should resemble the following example:
+
+# pacman -S package1 package2 package3...
+
+	After the command finishes, exit your "CHROOT" environment by envoking the "exit" command 
+and reboot the computer to confirm that the issue has been resolved. 
