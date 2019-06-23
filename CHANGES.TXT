@@ -284,4 +284,25 @@ day that the damage occured. Then, assemble a command to reinstall the effected 
 # pacman -S package1 package2 package3...
 
 	After the command finishes, exit your "CHROOT" environment by envoking the "exit" command 
-and reboot the computer to confirm that the issue has been resolved. 
+and reboot the computer to confirm that the issue has been resolved.
+
+========================================================================================================
+########################################################################################################
+========================================================================================================
+
+++ Platform: Arch Linux
+++ Issue: Civilization 6 VI Does not launch through steam complains about libfontconfig.so.1 missing
+symbol FT_Done_MM_Var
+
+In steam set the following launch options
+
+LD_PRELOAD=/usr/lib/libfreetype.so.6 %command%
+
+or to run it in the terminal place a text file named steam_appid.txt
+in the games directory. This text file must contain 289070 and nothing else.
+
+cd $STEAMLIBRARY/steamapps/common/Sid\ Meier\'s\ Civilization\ VI/
+env LD_PRELOAD=/usr/lib/libfreetype.so.6 ./Civ6
+
+to launch the game
+
