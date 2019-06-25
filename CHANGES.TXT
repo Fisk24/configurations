@@ -306,3 +306,26 @@ env LD_PRELOAD=/usr/lib/libfreetype.so.6 ./Civ6
 
 to launch the game
 
+========================================================================================================
+########################################################################################################
+========================================================================================================
+
+++ Platform: Arch Linux
+++ Issue: Discord joining channel causes system wide audio crackling
+
+Solution found here: https://wiki.archlinux.org/index.php/PulseAudio/Troubleshooting#Glitches,_skips_or_crackling
+
+The newer implementation of the PulseAudio sound server uses timer-based audio scheduling instead of the traditional, interrupt-driven approach.
+
+Timer-based scheduling may expose issues in some ALSA drivers. On the other hand, other drivers might be glitchy without it on, so check to see what works on your system.
+
+To turn timer-based scheduling off add tsched=0 in /etc/pulse/default.pa:
+
+eg:
+	load-module module-udev-detect tsched=0
+
+Then restart the PulseAudio server:
+
+$ pulseaudio -k
+$ pulseaudio --start
+
