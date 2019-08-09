@@ -4,15 +4,15 @@ set nocompatible
 filetype off
 
 " Vundle
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 " Vundle Bundles
-Bundle 'gmarik/vundle'
-Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-Plugin 'scrooloose/nerdtree'
+Plugin 'VundleVim/Vundle.vim'
+"Plugin 'scrooloose/nerdtree'
 Plugin 'Valloric/YouCompleteMe'
 
+call vundle#end()
 filetype plugin indent on
 
 " YCM
@@ -23,6 +23,9 @@ map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " Dont let NERDTree hang your vim if its the only window remaining
 
 " Powerline setup
+python3 from powerline.vim import setup as powerline_setup
+python3 powerline_setup()
+python3 del powerline_setup
 set guifont=PowerlineSymbols\ Medium
 set laststatus=2
 
