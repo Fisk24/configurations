@@ -41,7 +41,7 @@ Platform: Arch Manjaro Linux Firefox
 Issue: hulu in firefox drm; There was a problem playing this protected content (Code: 2203)
 
 # the hal package enables playback of drm protected content
-yaourt hal-flash
+yay hal-flash
 
 =======================================================================================================================
 #######################################################################################################################
