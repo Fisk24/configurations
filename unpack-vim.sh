@@ -10,7 +10,7 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 echo "######### Installing Powerline #########"
 sudo pacman -S python-pip fontconfig
-sudo pip333 install --user powerline-status
+pip3 install --user powerline-status
 wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
 wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf
 mkdir -p ~/.local/share/fonts/
