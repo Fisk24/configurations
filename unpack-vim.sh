@@ -21,7 +21,7 @@ mv 10-powerline-symbols.conf ~/.config/fontconfig/conf.d/
 
 echo "########## Installing build deps for YouCompleteMe, assuming base-devel is already installed. ########"
 # Make sure we actually have the packages we need
-sudo pacman -S cmake nodejs npm
+sudo pacman -S cmake nodejs npm clang go
 
 # Obtain Plugin
 cd ~/.vim/bundle
