@@ -1,0 +1,16 @@
+#! /bin/bash
+
+if test `id -u` != "0" ; then
+	echo "This script must be run as root."
+	exit
+fi
+
+if test "$1" == "what" ; then
+	echo "Servers:"
+	out=`sudo runuser -l minecraft -c "tmux list-sessions"` 
+	echo "$out" | grep -o -E '.*?mc-[^:]*'
+
+else
+	sudo runuser -l minecraft -c "tmux attach-session -t mc-$1"
+fi
+

@@ -1,0 +1,3 @@
+cd /opt/minecraft/FTBBeyond
+echo "eula=true" > /opt/minecraft/FTBBeyond/eula.txt
+su -c "/opt/minecraft/FTBBeyond/FTBInstall.sh" -s "/bin/bash" minecraft
