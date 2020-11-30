@@ -59,6 +59,13 @@ elif test "$1" == "install"; then
 	echo "===================================================================================="
 	cp ./minecraft@.service /etc/systemd/system/minecraft@.service
 	# Deploy my conveinence scripts to the path at this point as well?
+	
+	echo "===================================================================================="
+	echo "## Opening port 25565 in UFW...                                                               ##"
+	echo "===================================================================================="
+	
+	ufw allow 25565/tcp
+
 	echo "Done."
 
 else
