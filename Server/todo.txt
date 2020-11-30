@@ -1,0 +1,13 @@
++ server samba config
++ lightdm configs
++ systemd logind.conf (for laptop lid switch primarily)
++ server hardening scripts
++ generic hardening scripts
++ xwiimote scripts/configs
++ mouse bigger script/config
++ tmux configs
++ PiHole Scripts/Configs
++ rxvt scripts/configs
+
+Generally keep an eye out for any time you are instructed to edit a config file 
+Figure out how to get an encrypted file container open and usable when stored on a server but sill make it accessable by a client computer
