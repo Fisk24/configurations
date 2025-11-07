@@ -1,0 +1,54 @@
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt autocd extendedglob nomatch notify
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename '/data/data/com.termux/files/home/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+PROMPT='termux:%~% => '
+
+# User PATH
+export PATH=$PATH:/home/fisk/.bin
+
+alias sshl='cat ~/.ssh/config | grep Host'
+alias cisco='telnet localhost 2323'
+
+# SSH AGENT
+# depends on keychain: pacman -S keychain
+# 
+# --eval switch output lines to the containing eval function, neccisary for setting the
+# required variables for an ssh client to find the agent
+#
+# --quiet only shows outputs for warnings, errors, and user input
+#
+# --confhost tells keychain to only load keys from my ~/.ssh/config IdentityFile lines
+#
+# --noask tells keychain that i want to wait to unlock the keys until i actually use them
+#
+# --nogui tells keychain that it should always use the terminal to ask for my password 
+eval $(keychain --eval --quiet --confallhosts --noask --nogui)
+
+# Override the ssh command: 
+# Quality of life ssh pipeline
+#ssh() {
+	#first, envoke a python script that checks to see if the 
+	#server we are attempting to connect to has an 
+	#IdentityFile configured in ~/.ssh/config
+	#it will then add the key to the ssh-agent using ssh-add
+	#but only if the key hasent already been added
+#	/usr/bin/env python3 ~/.bin/ssh.py "$1"
+	
+	# Then finally we will actually envoke ssh
+#	/usr/bin/env ssh "$@"
+#}
+
+# Startup
+#tmux
+clear
+fastfetch
